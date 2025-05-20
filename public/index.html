@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aquela Empada - Cardápio</title>
+  <style>
+    body { background: #fff8e1; font-family: sans-serif; color: #5e3a1c; }
+    h1 { color: #d29500; }
+    .produto { background: #fff3cd; margin: 10px; padding: 10px; border-radius: 10px; }
+    .btn { background: #d29500; color: white; padding: 10px; border: none; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Cardápio - Aquela Empada</h1>
+  <div id="cardapio"></div>
+  <button class="btn" onclick="enviarWhatsApp()">Fazer Pedido via WhatsApp</button>
+
+  <script>
+    let carrinho = [];
+
+    fetch('/api/produtos')
+      .then(res => res.json())
+      .then(data => {
+        const div = document.getElementById('cardapio');
+        data.forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'produto';
+          item.innerHTML = `<strong>${p.nome}</strong> <button onclick='carrinho.push("${p.nome}")'>Adicionar</button>`;
+          div.appendChild(item);
+        });
+      });
+
+    function enviarWhatsApp() {
+      const texto = encodeURIComponent('Olá, gostaria de pedir:\n' + carrinho.map(p => '- ' + p).join('\n'));
+      window.open(`https://wa.me/5599999999999?text=${texto}`, '_blank');
+    }
+  </script>
+</body>
+</html>
